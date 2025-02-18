@@ -1,6 +1,7 @@
 import { flatten } from 'flat';
 import * as fs from 'fs';
 import * as path from 'path';
+import { globSync } from 'glob';
 
 export type FileType = 'key-based' | 'natural' | 'auto';
 
@@ -43,12 +44,11 @@ export const detectFileType = (json: any): FileType => {
 
 export const loadTranslations = (
   directory: string,
+  exclude?: string,
   fileType: FileType = 'auto',
   withArrays = false,
 ) =>
-  fs
-    .readdirSync(directory)
-    .filter((f) => f.endsWith('.json'))
+    globSync(`${directory}/*.json`, { ignore: exclude })
     .map((f) => {
       const json = require(path.resolve(directory, f));
       const type = fileType === 'auto' ? detectFileType(json) : fileType;
