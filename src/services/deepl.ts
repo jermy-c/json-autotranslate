@@ -95,7 +95,8 @@ export class DeepL implements TranslationService {
       features: { formality: boolean };
     }> = await response.json();
 
-    return languages;
+    const targetLanguages = languages.filter((l) => l.usable_as_target);
+    return targetLanguages;
   }
 
   getFormalityLanguages(
